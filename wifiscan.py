@@ -5,6 +5,7 @@ PROBE_REQUEST_SUBTYPE=4
 
 WHITELIST = ['00:00:00:00:00:00',] # Replace this with your phone's MAC address
 
+
 def PacketHandler(pkt):
     if pkt.haslayer(Dot11):
         if pkt.type==PROBE_REQUEST_TYPE and pkt.subtype == PROBE_REQUEST_SUBTYPE and ( pkt.addr2.lower() in WHITELIST or pkt.addr2.upper() in WHITELIST):
@@ -28,12 +29,7 @@ def main():
     print "[%s] Starting scan"%datetime.now()
     print "Scanning for:"
     print "\n".join(mac for mac in WHITELIST)
-    while(True):
-        # we limit the count to 100 to prevent memory use from escalating forever
-        # once it hits 100 packets sniffed, it will stop the sniffing process,
-        # freeing up memory, and then restart the process when the loop restarts
-        sniff(iface=sys.argv[1],prn=PacketHandler,count=100)   
-    return 1
-
+    sniff(iface=sys.argv[1],prn=PacketHandler)
+    
 if __name__=="__main__":
     main()
